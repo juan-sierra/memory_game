@@ -1,25 +1,33 @@
 let cardEls = document.getElementsByClassName("card");
+let deck = document.getElementsByClassName("deck");
 
-let cardArr;
+let cardArr = [];
 
-cardArr.push(cardEls);
-
-function shuffle(array) {
-  var currentIndex = array.length,
-    temporaryValue,
-    randomIndex;
-
-  while (currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    temporaryValue = array[currentIndex];
-    array[currentIndex] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+function loopArr(cards, arr) {
+  for (let i = 0; i < cards.length; i++) {
+    arr.push(cards[i]);
   }
+  function shuffle(array) {
+    let currentIndex = array.length,
+      temporaryValue,
+      randomIndex;
 
-  return array;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    function appendTo(cardList, container) {
+      for (let i = 0; i < cardList.length; i++) {
+        cardEls = cardList;
+        container[0].appendChild(cardEls[i]);
+      }
+    }
+    return appendTo(array, deck);
+  }
+  return shuffle(arr);
 }
 
-let results = shuffle(cardArr);
-
-console.log(results);
+loopArr(cardEls, cardArr);
