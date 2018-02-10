@@ -23,6 +23,14 @@ function loopArr(cards, arr) {
       for (let i = 0; i < cardList.length; i++) {
         cardEls = cardList;
         container[0].appendChild(cardEls[i]);
+        cardEls[i].addEventListener(
+          "click",
+          function() {
+            cardEls[i].classList.toggle("open");
+            cardEls[i].classList.toggle("show");
+          },
+          false
+        );
       }
     }
     return appendTo(array, deck);
