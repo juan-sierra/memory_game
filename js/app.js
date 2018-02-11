@@ -1,6 +1,9 @@
 let cardEls = document.getElementsByClassName("card");
 let deck = document.getElementsByClassName("deck");
 
+let stars = document.getElementsByClassName("stars");
+let icons = document.getElementsByClassName("fa");
+
 let cardArr = [];
 
 function loopArr(cards, arr) {
