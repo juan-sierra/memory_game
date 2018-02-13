@@ -1,14 +1,19 @@
-let cardEls = document.getElementsByClassName("card");
+let cardEl = document.getElementsByClassName("card");
 let deck = document.getElementsByClassName("deck");
+let reset = document.getElementsByClassName("restart");
 
-let cardArr = [];
+let newArr = [];
 
-function loopArr(cards, arr) {
+// loop through cardEl
+// then push to newArr
+function pushToArr(cards, emptyArr) {
   for (let i = 0; i < cards.length; i++) {
-    arr.push(cards[i]);
+    emptyArr.push(cards[i]);
   }
+
+  // shuffling algorithm
   function shuffle(array) {
-    let currentIndex = array.length,
+    var currentIndex = array.length,
       temporaryValue,
       randomIndex;
 
@@ -19,23 +24,29 @@ function loopArr(cards, arr) {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-    function appendTo(cardList, container) {
-      for (let i = 0; i < cardList.length; i++) {
-        cardEls = cardList;
-        container[0].appendChild(cardEls[i]);
-        cardEls[i].addEventListener(
-          "click",
-          function() {
-            cardEls[i].classList.toggle("open");
-            cardEls[i].classList.toggle("show");
-          },
-          false
-        );
+
+    // Append shuffled items to page
+    function insertDeck(cardItems, container) {
+      for (let i = 0; i < cardItems.length; i++) {
+        container.appendChild(cardItems[i]);
       }
     }
-    return appendTo(array, deck);
+    return insertDeck(array, deck[0]);
   }
-  return shuffle(arr);
+  return shuffle(emptyArr);
 }
 
-loopArr(cardEls, cardArr);
+// reset game / refresh page
+function restart(btn) {
+  btn.addEventListener(
+    "click",
+    function() {
+      window.location.reload();
+    },
+    false
+  );
+}
+
+restart(reset[0]);
+
+pushToArr(cardEl, newArr);
