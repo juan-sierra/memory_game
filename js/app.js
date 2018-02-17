@@ -1,17 +1,19 @@
-let cardEl = document.getElementsByClassName("card");
+let cards = document.getElementsByClassName("card");
+
 let deck = document.getElementsByClassName("deck");
-let reset = document.getElementsByClassName("restart");
 
-let newArr = [];
+let shuffledArr = [];
 
-// loop through cardEl
-// then push to newArr
-function pushToArr(cards, emptyArr) {
-  for (let i = 0; i < cards.length; i++) {
-    emptyArr.push(cards[i]);
+let tracker = [];
+
+let cardOne, cardTwo;
+
+// push card elements to an empty array
+function loopCards(card) {
+  for (let i = 0; i < card.length; i++) {
+    shuffledArr.push(card[i]);
   }
-
-  // shuffling algorithm
+  //   shuffling algorithm
   function shuffle(array) {
     var currentIndex = array.length,
       temporaryValue,
@@ -24,29 +26,39 @@ function pushToArr(cards, emptyArr) {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-
-    // Append shuffled items to page
-    function insertDeck(cardItems, container) {
-      for (let i = 0; i < cardItems.length; i++) {
-        container.appendChild(cardItems[i]);
+    // render shuffled cards back to deck
+    function render(el) {
+      deck = deck[0];
+      for (let i = 0; i < el.length; i++) {
+        deck.appendChild(el[i]);
+        el[i].addEventListener("click", function() {
+          el[i].classList.add("open", "show");
+          tracker.push(el[i]);
+          if (tracker[0] && tracker[1]) {
+            cardOne = tracker[0].children[0];
+            cardTwo = tracker[1].children[0];
+            if (
+              tracker[0].classList.contains("open") &&
+              tracker[1].classList.contains("open")
+            ) {
+              if (
+                cardOne.classList[1] != cardTwo.classList[1] &&
+                cardTwo.classList[1] != cardOne.classList[1]
+              ) {
+                tracker[0].classList.remove("open", "show");
+                tracker[1].classList.remove("open", "show");
+              } else {
+                tracker[0].classList.add("match");
+                tracker[1].classList.add("match");
+              }
+            }
+          }
+        });
       }
     }
-    return insertDeck(array, deck[0]);
+    return render(array);
   }
-  return shuffle(emptyArr);
+  return shuffle(shuffledArr);
 }
 
-// reset game / refresh page
-function restart(btn) {
-  btn.addEventListener(
-    "click",
-    function() {
-      window.location.reload();
-    },
-    false
-  );
-}
-
-restart(reset[0]);
-
-pushToArr(cardEl, newArr);
+loopCards(cards);
