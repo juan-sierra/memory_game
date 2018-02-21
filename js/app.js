@@ -2,11 +2,44 @@ let cards = document.getElementsByClassName("card");
 
 let deck = document.getElementsByClassName("deck");
 
+let container = document.getElementsByClassName("container");
+
 let shuffledArr = [];
 
 let tracker = [];
 
+let matched = [];
+
+let counter = 1;
+
 let cardOne, cardTwo;
+
+// timer
+// https://stackoverflow.com/questions/5517597/plain-count-up-timer-in-javascript
+let minutes = document.getElementsByClassName("minutes");
+let seconds = document.getElementsByClassName("seconds");
+
+let totalSeconds = 0;
+
+minutes = minutes[0];
+seconds = seconds[0];
+
+function setTime() {
+  totalSeconds++;
+  seconds.innerHTML = pad(totalSeconds % 60);
+  minutes.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+function pad(val) {
+  let valStr = val + "";
+  if (valStr.length < 2) {
+    return "0" + valStr;
+  } else {
+    return valStr;
+  }
+}
+
+setInterval(setTime, 1000);
 
 // push card elements to an empty array
 function loopCards(card) {
@@ -31,30 +64,16 @@ function loopCards(card) {
       deck = deck[0];
       for (let i = 0; i < el.length; i++) {
         deck.appendChild(el[i]);
-        el[i].addEventListener("click", function() {
+        el[i].addEventListener("click", function(ev) {
           el[i].classList.add("open", "show");
-          tracker.push(el[i]);
-          if (tracker[0] && tracker[1]) {
-            cardOne = tracker[0].children[0];
-            cardTwo = tracker[1].children[0];
-            if (
-              tracker[0].classList.contains("open") &&
-              tracker[1].classList.contains("open")
-            ) {
-              if (
-                cardOne.classList[1] != cardTwo.classList[1] &&
-                cardTwo.classList[1] != cardOne.classList[1]
-              ) {
-                tracker[0].classList.remove("open", "show");
-                tracker[1].classList.remove("open", "show");
-              } else {
-                tracker[0].classList.add("match");
-                tracker[1].classList.add("match");
-              }
-            }
+          el[i].classList.add("open", "show");
+          if (tracker.length <= counter) {
+            tracker.push(el[i]);
           }
         });
       }
+      function match() {}
+      return tracker;
     }
     return render(array);
   }
