@@ -1,7 +1,7 @@
 TODO:
 
 - memory game logic
-  * randonly shuffle the cards [√]
+  * randomly shuffle the cards [√]
   * user wins once all cards have been matched
 - congratulations popup
   * modal appears to congratulate player
@@ -9,11 +9,12 @@ TODO:
   * tell the user how much time it took to win the game
   * and tell what the star rating was
 - restart button
-  * Allows player to reset the game board
-  * timer
+  * Allows player to reset the game board [√]
+  * timer [√]
   * star rating
+  * moves
 - star rating
-  * game dislays rating from 1-3 (refeclts player's performance)
+  * game displays rating from 1-3 (refeclts player's performance)
   * after some number of moves it should change to a 2 star rating
   * after a few more moves it should change to a 1 star rating
 - timer
