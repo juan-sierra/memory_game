@@ -50,9 +50,20 @@ let newCards = [];
 deckUl = deckUl[0];
 
 //  trackers
-let moveTracker;
+let moveTracker = 0;
 let cardTracker = [];
 let matchedCards = [];
+
+let innerCardOne;
+let innerCardTwo;
+
+// remove class
+let removeClass = a => {
+  a.forEach(b => {
+    b.classList.remove("open", "show");
+    console.log(b);
+  });
+};
 
 // push cards to emptyArr
 function loopCards(card) {
@@ -81,6 +92,13 @@ function loopCards(card) {
           // push opened pairs to cardTracker
           if (cardTracker.length < 2) {
             cardTracker.push(el[i]);
+            if (cardTracker[0] && cardTracker[1]) {
+              innerCardOne = cardTracker[0].children[0];
+              innerCardTwo = cardTracker[1].children[0];
+              if (innerCardOne.classList[1] != innerCardTwo.classList[1]) {
+                removeClass(cardTracker);
+              }
+            }
           }
         });
       }
@@ -107,6 +125,27 @@ function pad(val) {
   }
 }
 
+let c;
+
+// start timer
+let start = () => {
+  c = setInterval(setTime, 1000);
+  if (true) {
+    c;
+  }
+};
+
+// reset timer
+let reset = () => {
+  if (true) {
+    seconds.innerHTML = "00";
+    minutes.innerHTML = "00";
+    totalSeconds = 0;
+    clearInterval(c);
+    setTimeout(c, 1000);
+  }
+};
+
 // add class for animation when window loads completely
 window.addEventListener("load", function() {
   container.appendChild(startModal);
@@ -114,27 +153,30 @@ window.addEventListener("load", function() {
 });
 
 // run game once button is clicked and hide modal
-modalBtn.addEventListener("click", function() {
-  if (true) {
-    startModal.classList.remove("showModal");
-    loopCards(cards);
-    setInterval(setTime, 1000);
-  }
-});
+modalBtn.addEventListener(
+  "click",
+  function() {
+    if (true) {
+      startModal.classList.remove("showModal");
+      loopCards(cards);
+      start();
+    }
+  },
+  false
+);
 
-// reset settings
-restartBtn.addEventListener("click", function() {
+restartBtn.addEventListener("click", () => {
   modalHeader.innerHTML = "Are you sure you want to restart?";
-  modalBtn.innerHTML = "Yes, I'm sure";
+  modalBtn.innerHTML = "Yes, I'm ready";
   startModal.appendChild(modalHeader);
   startModal.appendChild(restartInfo);
   startModal.appendChild(modalBtn);
   container.appendChild(startModal);
   startModal.classList.add("showModal");
-
   modalBtn.onclick = function() {
     if (true) {
       startModal.classList.remove("showModal");
+      reset();
     }
   };
 });
