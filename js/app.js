@@ -57,14 +57,6 @@ let matchedCards = [];
 let innerCardOne;
 let innerCardTwo;
 
-// remove class
-let removeClass = a => {
-  a.forEach(b => {
-    b.classList.remove("open", "show");
-    console.log(b);
-  });
-};
-
 // push cards to emptyArr
 function loopCards(card) {
   for (let i = 0; i < card.length; i++) {
@@ -95,8 +87,38 @@ function loopCards(card) {
             if (cardTracker[0] && cardTracker[1]) {
               innerCardOne = cardTracker[0].children[0];
               innerCardTwo = cardTracker[1].children[0];
-              if (innerCardOne.classList[1] != innerCardTwo.classList[1]) {
-                removeClass(cardTracker);
+              if (innerCardOne.classList[1] == innerCardTwo.classList[1]) {
+                cardTracker[0].classList.add("match");
+                cardTracker[1].classList.add("match");
+                moveTracker++;
+                moves.innerHTML = moveTracker;
+                matchedCards.push(cardTracker);
+                cardTracker = [];
+                console.log(matchedCards);
+                if (matchedCards.length == 8) {
+                  modalHeader.innerHTML =
+                    "Congratulations! You have won the game";
+                  modalBtn.innerHTML = "Yes, I want to play again";
+                  restartInfo.innerHTML = `It took $moveTracker, $totalSeconds, and you ended with a star rating of...`;
+                  startModal.appendChild(modalHeader);
+                  startModal.appendChild(restartInfo);
+                  startModal.appendChild(modalBtn);
+                  container.appendChild(startModal);
+
+                  setTimeout(function() {
+                    startModal.classList.add("showModal");
+                  }, 5);
+                }
+              } else if (
+                innerCardOne.classList[1] != innerCardTwo.classList[1]
+              ) {
+                setTimeout(function() {
+                  cardTracker[0].classList.remove("open", "show");
+                  cardTracker[1].classList.remove("open", "show");
+                  cardTracker = [];
+                }, 1000);
+                moveTracker++;
+                moves.innerHTML = moveTracker;
               }
             }
           }
@@ -149,7 +171,9 @@ let reset = () => {
 // add class for animation when window loads completely
 window.addEventListener("load", function() {
   container.appendChild(startModal);
-  startModal.classList.add("showModal");
+  setTimeout(function() {
+    startModal.classList.add("showModal");
+  }, 5);
 });
 
 // run game once button is clicked and hide modal
@@ -172,10 +196,15 @@ restartBtn.addEventListener("click", () => {
   startModal.appendChild(restartInfo);
   startModal.appendChild(modalBtn);
   container.appendChild(startModal);
-  startModal.classList.add("showModal");
+
+  setTimeout(function() {
+    startModal.classList.add("showModal");
+  }, 5);
   modalBtn.onclick = function() {
     if (true) {
       startModal.classList.remove("showModal");
+      moveTracker = 0;
+      moves.innerHTML = 0;
       reset();
     }
   };
