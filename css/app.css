@@ -103,7 +103,45 @@ h1 {
   display: inline-block;
 }
 
+.score-panel .timer {
+  padding: 1.5em;
+}
+
 .score-panel .restart {
   float: right;
   cursor: pointer;
+}
+
+/* modal style */
+.modal {
+  background-color: white;
+  min-height: 100%;
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  transform: translateY(-100em);
+  transition: all 1.5s ease-out;
+}
+
+.showModal {
+  transform: translateY(0);
+  transition: all 1.5s ease-out;
+}
+
+.modal .modalHeader {
+  font-size: 3.5em;
+}
+
+.modal .modalBtn {
+  background-color: rgb(2, 204, 186);
+  color: white;
+  font-size: 1.2em;
+  padding: 1em;
+  border-style: none;
+  border-radius: 0.5em;
+  cursor: pointer;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
 }

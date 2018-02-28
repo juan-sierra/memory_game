@@ -1,17 +1,70 @@
-let cardEls = document.getElementsByClassName("card");
-let deck = document.getElementsByClassName("deck");
+let container = document.getElementsByClassName("container");
 
-let stars = document.getElementsByClassName("stars");
-let icons = document.getElementsByClassName("fa");
+container = container[0];
 
-let cardArr = [];
+// modal component that shows up to ask user if they are ready to play
+let startModal = document.createElement("section");
+let modalHeader = document.createElement("h1");
+let modalBtn = document.createElement("button");
 
-function loopArr(cards, arr) {
-  for (let i = 0; i < cards.length; i++) {
-    arr.push(cards[i]);
+modalHeader.innerHTML = "Are you ready to begin?";
+modalBtn.innerHTML = "Yes, I'm ready";
+
+startModal.classList.add("modal");
+modalHeader.classList.add("modalHeader");
+modalBtn.classList.add("modalBtn");
+
+startModal.appendChild(modalHeader);
+startModal.appendChild(modalBtn);
+
+// score panel
+let panel = document.getElementsByClassName("score-panel");
+let starsUl = document.getElementsByClassName("stars");
+let stars = document.getElementsByClassName("fa-star");
+let moves = document.getElementsByClassName("moves");
+panel = panel[0];
+starsUl = starsUl[0];
+stars = stars[0];
+moves = moves[0];
+
+// timer
+let minutes = document.getElementsByClassName("minutes");
+let seconds = document.getElementsByClassName("seconds");
+minutes = minutes[0];
+seconds = seconds[0];
+
+let totalSeconds = 0;
+
+// restart button
+let restartBtn = document.getElementsByClassName("fa-repeat");
+let restartInfo = document.createElement("p");
+restartBtn = restartBtn[0];
+restartInfo.classList.add("restartInfo");
+
+restartInfo.innerHTML = "* All progress you've made, will be lost on restart";
+
+// deck and cards
+let cards = document.getElementsByClassName("card");
+let deckUl = document.getElementsByClassName("deck");
+let newCards = [];
+deckUl = deckUl[0];
+
+//  trackers
+let moveTracker = 0;
+let cardTracker = [];
+let matchedCards = [];
+
+let innerCardOne;
+let innerCardTwo;
+
+// push cards to emptyArr
+function loopCards(card) {
+  for (let i = 0; i < card.length; i++) {
+    newCards.push(card[i]);
   }
+  //   shuffling algorithm
   function shuffle(array) {
-    let currentIndex = array.length,
+    var currentIndex = array.length,
       temporaryValue,
       randomIndex;
 
@@ -22,23 +75,137 @@ function loopArr(cards, arr) {
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
-    function appendTo(cardList, container) {
-      for (let i = 0; i < cardList.length; i++) {
-        cardEls = cardList;
-        container[0].appendChild(cardEls[i]);
-        cardEls[i].addEventListener(
-          "click",
-          function() {
-            cardEls[i].classList.toggle("open");
-            cardEls[i].classList.toggle("show");
-          },
-          false
-        );
+    // render shuffled cards to page
+    function render(el) {
+      for (let i = 0; i < el.length; i++) {
+        deckUl.appendChild(el[i]);
+        el[i].addEventListener("click", function(ev) {
+          el[i].classList.add("open", "show");
+          // push opened pairs to cardTracker
+          if (cardTracker.length < 2) {
+            cardTracker.push(el[i]);
+            if (cardTracker[0] && cardTracker[1]) {
+              innerCardOne = cardTracker[0].children[0];
+              innerCardTwo = cardTracker[1].children[0];
+              if (innerCardOne.classList[1] == innerCardTwo.classList[1]) {
+                cardTracker[0].classList.add("match");
+                cardTracker[1].classList.add("match");
+                moveTracker++;
+                moves.innerHTML = moveTracker;
+                matchedCards.push(cardTracker);
+                cardTracker = [];
+                console.log(matchedCards);
+                if (matchedCards.length == 8) {
+                  modalHeader.innerHTML =
+                    "Congratulations! You have won the game";
+                  modalBtn.innerHTML = "Yes, I want to play again";
+                  restartInfo.innerHTML = `It took $moveTracker, $totalSeconds, and you ended with a star rating of...`;
+                  startModal.appendChild(modalHeader);
+                  startModal.appendChild(restartInfo);
+                  startModal.appendChild(modalBtn);
+                  container.appendChild(startModal);
+
+                  setTimeout(function() {
+                    startModal.classList.add("showModal");
+                  }, 5);
+                }
+              } else if (
+                innerCardOne.classList[1] != innerCardTwo.classList[1]
+              ) {
+                setTimeout(function() {
+                  cardTracker[0].classList.remove("open", "show");
+                  cardTracker[1].classList.remove("open", "show");
+                  cardTracker = [];
+                }, 1000);
+                moveTracker++;
+                moves.innerHTML = moveTracker;
+              }
+            }
+          }
+        });
       }
     }
-    return appendTo(array, deck);
+
+    return render(array);
   }
-  return shuffle(arr);
+  return shuffle(newCards);
 }
 
-loopArr(cardEls, cardArr);
+// timer
+function setTime() {
+  totalSeconds++;
+  seconds.innerHTML = pad(totalSeconds % 60);
+  minutes.innerHTML = pad(parseInt(totalSeconds / 60));
+}
+
+function pad(val) {
+  let valStr = val + "";
+  if (valStr.length < 2) {
+    return "0" + valStr;
+  } else {
+    return valStr;
+  }
+}
+
+let c;
+
+// start timer
+let start = () => {
+  c = setInterval(setTime, 1000);
+  if (true) {
+    c;
+  }
+};
+
+// reset timer
+let reset = () => {
+  if (true) {
+    seconds.innerHTML = "00";
+    minutes.innerHTML = "00";
+    totalSeconds = 0;
+    clearInterval(c);
+    setTimeout(c, 1000);
+  }
+};
+
+// add class for animation when window loads completely
+window.addEventListener("load", function() {
+  container.appendChild(startModal);
+  setTimeout(function() {
+    startModal.classList.add("showModal");
+  }, 5);
+});
+
+// run game once button is clicked and hide modal
+modalBtn.addEventListener(
+  "click",
+  function() {
+    if (true) {
+      startModal.classList.remove("showModal");
+      loopCards(cards);
+      start();
+    }
+  },
+  false
+);
+
+restartBtn.addEventListener("click", () => {
+  modalHeader.innerHTML = "Are you sure you want to restart?";
+  modalBtn.innerHTML = "Yes, I'm ready";
+  startModal.appendChild(modalHeader);
+  startModal.appendChild(restartInfo);
+  startModal.appendChild(modalBtn);
+  container.appendChild(startModal);
+
+  setTimeout(function() {
+    startModal.classList.add("showModal");
+  }, 5);
+  modalBtn.onclick = function() {
+    if (true) {
+      startModal.classList.remove("showModal");
+      moveTracker = 0;
+      moves.innerHTML = 0;
+      reset();
+    }
+  };
+});
