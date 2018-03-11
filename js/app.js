@@ -1,137 +1,11 @@
-let container = document.getElementsByClassName("container");
-
-container = container[0];
-
-// modal component that shows up to ask user if they are ready to play
-let startModal = document.createElement("section");
-let modalHeader = document.createElement("h1");
-let modalBtn = document.createElement("button");
-
-modalHeader.innerHTML = "Are you ready to begin?";
-modalBtn.innerHTML = "Yes, I'm ready";
-
-startModal.classList.add("modal");
-modalHeader.classList.add("modalHeader");
-modalBtn.classList.add("modalBtn");
-
-startModal.appendChild(modalHeader);
-startModal.appendChild(modalBtn);
-
-// score panel
-let panel = document.getElementsByClassName("score-panel");
-let starsUl = document.getElementsByClassName("stars");
-let stars = document.getElementsByClassName("fa-star");
-let moves = document.getElementsByClassName("moves");
-panel = panel[0];
-starsUl = starsUl[0];
-stars = stars[0];
-moves = moves[0];
-
-// timer
+/* ----------- timer ----------- */
 let minutes = document.getElementsByClassName("minutes");
-let seconds = document.getElementsByClassName("seconds");
 minutes = minutes[0];
+let seconds = document.getElementsByClassName("seconds");
 seconds = seconds[0];
-
 let totalSeconds = 0;
+setInterval(setTime, 1000);
 
-// restart button
-let restartBtn = document.getElementsByClassName("fa-repeat");
-let restartInfo = document.createElement("p");
-restartBtn = restartBtn[0];
-restartInfo.classList.add("restartInfo");
-
-restartInfo.innerHTML = "* All progress you've made, will be lost on restart";
-
-// deck and cards
-let cards = document.getElementsByClassName("card");
-let deckUl = document.getElementsByClassName("deck");
-let newCards = [];
-deckUl = deckUl[0];
-
-//  trackers
-let moveTracker = 0;
-let cardTracker = [];
-let matchedCards = [];
-
-let innerCardOne;
-let innerCardTwo;
-
-// push cards to emptyArr
-function loopCards(card) {
-  for (let i = 0; i < card.length; i++) {
-    newCards.push(card[i]);
-  }
-  //   shuffling algorithm
-  function shuffle(array) {
-    var currentIndex = array.length,
-      temporaryValue,
-      randomIndex;
-
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    // render shuffled cards to page
-    function render(el) {
-      for (let i = 0; i < el.length; i++) {
-        deckUl.appendChild(el[i]);
-        el[i].addEventListener("click", function(ev) {
-          el[i].classList.add("open", "show");
-          // push opened pairs to cardTracker
-          if (cardTracker.length < 2) {
-            cardTracker.push(el[i]);
-            if (cardTracker[0] && cardTracker[1]) {
-              innerCardOne = cardTracker[0].children[0];
-              innerCardTwo = cardTracker[1].children[0];
-              if (innerCardOne.classList[1] == innerCardTwo.classList[1]) {
-                cardTracker[0].classList.add("match");
-                cardTracker[1].classList.add("match");
-                moveTracker++;
-                moves.innerHTML = moveTracker;
-                matchedCards.push(cardTracker);
-                cardTracker = [];
-                console.log(matchedCards);
-                if (matchedCards.length == 8) {
-                  modalHeader.innerHTML =
-                    "Congratulations! You have won the game";
-                  modalBtn.innerHTML = "Yes, I want to play again";
-                  restartInfo.innerHTML = `It took $moveTracker, $totalSeconds, and you ended with a star rating of...`;
-                  startModal.appendChild(modalHeader);
-                  startModal.appendChild(restartInfo);
-                  startModal.appendChild(modalBtn);
-                  container.appendChild(startModal);
-
-                  setTimeout(function() {
-                    startModal.classList.add("showModal");
-                  }, 5);
-                }
-              } else if (
-                innerCardOne.classList[1] != innerCardTwo.classList[1]
-              ) {
-                setTimeout(function() {
-                  cardTracker[0].classList.remove("open", "show");
-                  cardTracker[1].classList.remove("open", "show");
-                  cardTracker = [];
-                }, 1000);
-                moveTracker++;
-                moves.innerHTML = moveTracker;
-              }
-            }
-          }
-        });
-      }
-    }
-
-    return render(array);
-  }
-  return shuffle(newCards);
-}
-
-// timer
 function setTime() {
   totalSeconds++;
   seconds.innerHTML = pad(totalSeconds % 60);
@@ -146,66 +20,82 @@ function pad(val) {
     return valStr;
   }
 }
+/* ----------- timer ----------- */
 
-let c;
+/* ----------- card component ----------- */
+let cards = document.getElementsByClassName("card");
 
-// start timer
-let start = () => {
-  c = setInterval(setTime, 1000);
-  if (true) {
-    c;
+
+let cardArr = Array.from(cards);
+let openCards = [];
+let matchedCards = [];
+
+
+// shuffling algorithm
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-};
+  return array;
+}
+let deck = document.getElementsByClassName("deck");
+deck = deck[0];
+let cardOne, cardTwo;
+let innerCardOne, innerCardTwo;
+let moves = 0;
 
-// reset timer
-let reset = () => {
-  if (true) {
-    seconds.innerHTML = "00";
-    minutes.innerHTML = "00";
-    totalSeconds = 0;
-    clearInterval(c);
-    setTimeout(c, 1000);
+function matching(c) {
+  for (let i = 0; i < c.length; i++) {
+    deck.appendChild(c[i]);
+    if (c[i].classList.contains("match")) {
+      openCards = [];
+    }
+    c[i].addEventListener("click", function () {
+      c[i].classList.add("open", "show");
+      openCards.push(c[i]);
+
+      if (openCards.length <= 1) {
+        return;
+      }
+      if (openCards[0] && openCards[1]) {
+        moves++;
+        cardOne = openCards[0];
+        cardTwo = openCards[1];
+        innerCardOne = cardOne.children[0];
+        innerCardTwo = cardTwo.children[0];
+        if (cardOne == cardTwo) {
+          openCards = [];
+          cardOne.classList.remove("open", "show");
+          cardTwo.classList.remove("open", "show");
+          return;
+        }
+        if (innerCardOne.classList[1] == innerCardTwo.classList[1]) {
+          cardOne.classList.add("match");
+          cardTwo.classList.add("match");
+          matchedCards.push(cardOne, cardTwo);
+          console.log(matchedCards);
+          openCards = [];
+        } else {
+          setTimeout(function () {
+            cardOne.classList.remove("open", "show");
+            cardTwo.classList.remove("open", "show");
+            openCards = [];
+          }, 400);
+        }
+        if (matchedCards.length == 16) {
+          console.log('all cards have been matched');
+        }
+      }
+    });
+
   }
-};
+}
 
-// add class for animation when window loads completely
-window.addEventListener("load", function() {
-  container.appendChild(startModal);
-  setTimeout(function() {
-    startModal.classList.add("showModal");
-  }, 5);
-});
-
-// run game once button is clicked and hide modal
-modalBtn.addEventListener(
-  "click",
-  function() {
-    if (true) {
-      startModal.classList.remove("showModal");
-      loopCards(cards);
-      start();
-    }
-  },
-  false
-);
-
-restartBtn.addEventListener("click", () => {
-  modalHeader.innerHTML = "Are you sure you want to restart?";
-  modalBtn.innerHTML = "Yes, I'm ready";
-  startModal.appendChild(modalHeader);
-  startModal.appendChild(restartInfo);
-  startModal.appendChild(modalBtn);
-  container.appendChild(startModal);
-
-  setTimeout(function() {
-    startModal.classList.add("showModal");
-  }, 5);
-  modalBtn.onclick = function() {
-    if (true) {
-      startModal.classList.remove("showModal");
-      moveTracker = 0;
-      moves.innerHTML = 0;
-      reset();
-    }
-  };
-});
+shuffle(cardArr);
+matching(cardArr);

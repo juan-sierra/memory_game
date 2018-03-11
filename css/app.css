@@ -105,6 +105,7 @@ h1 {
 
 .score-panel .timer {
   padding: 1.5em;
+  margin: 1em;
 }
 
 .score-panel .restart {
