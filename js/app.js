@@ -49,18 +49,39 @@ deck = deck[0];
 let cardOne, cardTwo;
 let innerCardOne, innerCardTwo;
 let moves = 0;
+let movesEl = document.getElementsByClassName("moves");
+movesEl = movesEl[0];
+
+let rating = 3;
+
+let starDeck = document.getElementsByClassName("stars");
+starDeck = starDeck[0];
+
+let star = starDeck.children;
+
+// to prevent users from bugging out the game by clicking too fast
+let wait = false;
 
 function matching(c) {
   for (let i = 0; i < c.length; i++) {
+
+
     deck.appendChild(c[i]);
+
     if (c[i].classList.contains("match")) {
       openCards = [];
     }
+
     c[i].addEventListener("click", function () {
+
+      if (wait) {
+        return;
+      }
+
       c[i].classList.add("open", "show");
       openCards.push(c[i]);
 
-      if (openCards.length <= 1) {
+      if (openCards.length < 1) {
         return;
       }
       if (openCards[0] && openCards[1]) {
@@ -69,6 +90,7 @@ function matching(c) {
         cardTwo = openCards[1];
         innerCardOne = cardOne.children[0];
         innerCardTwo = cardTwo.children[0];
+        movesEl.innerHTML = moves;
         if (cardOne == cardTwo) {
           openCards = [];
           cardOne.classList.remove("open", "show");
@@ -81,12 +103,14 @@ function matching(c) {
           matchedCards.push(cardOne, cardTwo);
           console.log(matchedCards);
           openCards = [];
-        } else {
+        } else if (innerCardOne.classList[1] !== innerCardTwo.classList[1]) {
+          wait = true;
           setTimeout(function () {
             cardOne.classList.remove("open", "show");
             cardTwo.classList.remove("open", "show");
             openCards = [];
-          }, 400);
+            wait = false;
+          }, 450);
         }
         if (matchedCards.length == 16) {
           console.log('all cards have been matched');
