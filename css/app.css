@@ -115,7 +115,7 @@ h1 {
 
 /* modal style */
 .modal {
-  background: #ffffff url("../img/geometry2.png"); /* Background pattern from Subtle Patterns */
+  background: #ffffff url("../img/geometry2.png"); 
   height: 100vh;
   min-width: 100%;
   display: flex;
@@ -130,6 +130,7 @@ h1 {
 .showModal {
   transform: translateY(0);
   transition: all 1.5s ease-out;
+  z-index: 1;
 }
 
 .modal .modalHeader {
