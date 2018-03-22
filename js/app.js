@@ -59,14 +59,23 @@ starDeck = starDeck[0];
 
 let star = starDeck.children;
 
+let starArr = [];
+
 // to prevent users from bugging out the game by clicking too fast
 let wait = false;
+
+
+// congrats modal
+let modal = document.getElementsByClassName("modal");
+modal = modal[0];
 
 function matching(c) {
   for (let i = 0; i < c.length; i++) {
 
 
     deck.appendChild(c[i]);
+
+    starArr.push(star[i]);
 
     if (c[i].classList.contains("match")) {
       openCards = [];
@@ -91,6 +100,16 @@ function matching(c) {
         innerCardOne = cardOne.children[0];
         innerCardTwo = cardTwo.children[0];
         movesEl.innerHTML = moves;
+        if (moves == 10) {
+          starArr[2].children[0].classList.add("fa-star-o");
+          starDeck.appendChild(starArr[2]);
+        } else if (moves == 20) {
+          starArr[1].children[0].classList.add("fa-star-o");
+          starDeck.appendChild(starArr[1]);
+        } else if (moves == 25) {
+          starArr[0].children.classList.add("fa-star-o");
+          starDeck.appendChild(starArr[0]);
+        }
         if (cardOne == cardTwo) {
           openCards = [];
           cardOne.classList.remove("open", "show");
@@ -101,8 +120,10 @@ function matching(c) {
           cardOne.classList.add("match");
           cardTwo.classList.add("match");
           matchedCards.push(cardOne, cardTwo);
-          console.log(matchedCards);
           openCards = [];
+          if (matchedCards.length == 16) {
+            modal.classList.add("showModal");
+          }
         } else if (innerCardOne.classList[1] !== innerCardTwo.classList[1]) {
           wait = true;
           setTimeout(function () {
@@ -111,9 +132,6 @@ function matching(c) {
             openCards = [];
             wait = false;
           }, 450);
-        }
-        if (matchedCards.length == 16) {
-          console.log('all cards have been matched');
         }
       }
     });
