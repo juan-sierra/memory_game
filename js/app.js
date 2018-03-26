@@ -22,6 +22,16 @@ function pad(val) {
 }
 /* ----------- timer ----------- */
 
+// reset button
+let resetBtn = document.getElementsByClassName("restart");
+resetBtn = resetBtn[0];
+
+resetBtn.addEventListener("click", function () {
+  if (true) {
+    window.location.reload(true);
+  }
+}, false);
+
 /* ----------- card component ----------- */
 let cards = document.getElementsByClassName("card");
 
@@ -60,6 +70,7 @@ starDeck = starDeck[0];
 let star = starDeck.children;
 
 let starArr = [];
+let emptyStars = [];
 
 // to prevent users from bugging out the game by clicking too fast
 let wait = false;
@@ -102,12 +113,15 @@ function matching(c) {
         movesEl.innerHTML = moves;
         if (moves == 10) {
           starArr[2].children[0].classList.add("fa-star-o");
+          emptyStars.push(starArr[2]);
           starDeck.appendChild(starArr[2]);
         } else if (moves == 20) {
           starArr[1].children[0].classList.add("fa-star-o");
+          emptyStars.push(starArr[1]);
           starDeck.appendChild(starArr[1]);
         } else if (moves == 25) {
           starArr[0].children.classList.add("fa-star-o");
+          emptyStars.push(starArr[0]);
           starDeck.appendChild(starArr[0]);
         }
         if (cardOne == cardTwo) {
@@ -122,6 +136,22 @@ function matching(c) {
           matchedCards.push(cardOne, cardTwo);
           openCards = [];
           if (matchedCards.length == 16) {
+            let time = document.createElement('p');
+            let finalRating = document.createElement('p');
+            let starCount = 0;
+            if (emptyStars.length == 2) {
+              starCount = 0;
+            } else if (emptyStars.length == 1) {
+              starCount = 1;
+            } else if (emptyStars.length == 0) {
+              starCount = 2;
+            } else {
+              starCount = 3;
+            }
+            finalRating.innerHTML = `Final Rating: ${starCount}`;
+            time.innerHTML = `It took you ${totalSeconds} seconds`;
+            modal.appendChild(time);
+            modal.appendChild(finalRating);
             modal.classList.add("showModal");
           }
         } else if (innerCardOne.classList[1] !== innerCardTwo.classList[1]) {
